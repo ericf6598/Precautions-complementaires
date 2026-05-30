@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes"/>
-  <title>Précautions complémentaires</title>
+  <title>Précautions complémentaires - clin92</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     * {
@@ -19,13 +19,11 @@
       padding: 16px;
     }
 
-    /* Conteneur principal */
     .app-container {
       max-width: 800px;
       margin: 0 auto;
     }
 
-    /* Cartes */
     .card {
       background: white;
       border-radius: 16px;
@@ -35,59 +33,28 @@
       border: 1px solid #e2e8f0;
     }
 
-    /* Titre principal (suppression accordéon) */
     .main-title {
       color: #00796b;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
       border-bottom: 3px solid #00796b;
       display: inline-block;
     }
 
-    /* Intro courte */
-    .intro-short {
+    .intro {
       background-color: #e6f7f5;
       border-radius: 12px;
       padding: 16px;
-      margin-bottom: 16px;
       font-size: 14px;
       line-height: 1.5;
     }
 
-    .intro-short strong {
+    .intro strong {
       color: #00796b;
     }
 
-    .btn-toggle-intro {
-      background: none;
-      border: none;
-      color: #00796b;
-      font-size: 13px;
-      font-weight: 500;
-      margin-top: 8px;
-      padding: 0;
-      cursor: pointer;
-      display: inline-block;
-    }
-
-    .intro-full {
-      display: none;
-      background-color: #f8fafc;
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 12px;
-      font-size: 13px;
-      line-height: 1.5;
-      border-left: 4px solid #00796b;
-    }
-
-    .intro-full.show {
-      display: block;
-    }
-
-    /* Zone de sélection */
     .select-section {
       background: white;
       border-radius: 16px;
@@ -118,7 +85,6 @@
       border: 1px solid #cbd5e0;
       background-color: white;
       font-family: inherit;
-      margin-bottom: 16px;
       transition: all 0.2s;
     }
 
@@ -128,7 +94,6 @@
       box-shadow: 0 0 0 3px rgba(0,121,107,0.2);
     }
 
-    /* Résultats */
     .result {
       background: white;
       border-radius: 16px;
@@ -147,7 +112,6 @@
       border-bottom: 2px solid #e2e8f0;
     }
 
-    /* Sous-accordéons */
     .subaccordion {
       margin-bottom: 16px;
       border: 1px solid #e2e8f0;
@@ -189,7 +153,6 @@
       display: block;
     }
 
-    /* Listes */
     .subaccordion-content ul {
       margin: 0;
       padding-left: 20px;
@@ -200,7 +163,6 @@
       line-height: 1.5;
     }
 
-    /* Mention légale */
     .legal {
       text-align: center;
       font-size: 11px;
@@ -209,39 +171,20 @@
       padding-top: 16px;
       border-top: 1px solid #e2e8f0;
     }
-
-    /* Bouton (caché car auto-validation) */
-    #btnValider {
-      display: none;
-    }
-
-    /* Message chargement / erreur */
-    .info-message {
-      text-align: center;
-      padding: 20px;
-      color: #64748b;
-    }
   </style>
 </head>
 <body>
 <div class="app-container">
 
-  <!-- Titre principal (plus d'accordéon) -->
   <div class="card">
-    <div class="main-title">Précautions complémentaires</div>
-    <div class="intro-short">
-      <strong>Outil d'aide à la décision</strong> – Hôpital Foch.<br>
-      Déterminez les précautions complémentaires selon l'agent pathogène.
-      <button class="btn-toggle-intro" id="toggleIntroBtn">📖 En savoir plus</button>
-    </div>
-    <div class="intro-full" id="introFull">
-      <p>Les conduites à tenir proposées sont celles en usage à l'hôpital Foch, établies sur la base des recommandations en vigueur par les Dr Axelle de Raigniac et Eric Farfour. Validées par l'EPRI et le CLIN.</p>
-      <p><strong>Référentiels :</strong> SF2H 2016, SF2H 2024, Pilly, Pilly tropical, recommandations spécifiques.</p>
-      <p><small>Cette application ne se substitue pas aux avis de l'EPRI. © 2026. Tous droits réservés.</small></p>
+    <div class="main-title">Précautions complémentaires - clin92</div>
+    <div class="intro">
+      <strong>📋 Aide à la décision</strong><br>
+      Cette application propose une aide à la mise en place des précautions complémentaires selon l'agent pathogène. Cette application ne se substitue pas aux recommandations de votre équipe de prévention du risque infectieux.<br><br>
+      <strong>Référentiels :</strong> SF2H 2016, SF2H 2024, Pilly, recommandations spécifiques.
     </div>
   </div>
 
-  <!-- Sélection de l'agent pathogène -->
   <div class="select-section">
     <label class="select-label" for="agent_pathogène">Agent pathogène</label>
     <select id="agent_pathogène" name="agent_pathogène">
@@ -289,11 +232,10 @@
     </select>
   </div>
 
-  <!-- Résultats (affichage auto) -->
   <div class="result" id="abResultat" style="display: none;"></div>
 
   <div class="legal">
-    Application non substituable à l'avis de l'EPRI. Usage réservé aux professionnels de santé.
+    © 2026 - Hôpital Foch - Tous droits réservés
   </div>
 </div>
 
@@ -3873,10 +3815,6 @@ Gale: {
 
 };
 
-  // --- Fonctions utilitaires ---
-  function toggleSubAccordion(el) {
-    el.parentElement.classList.toggle('open');
-  }
 
   function formatNestedList(items) {
     if (!items || !items.length) return "<ul><li>Non spécifié</li></ul>";
@@ -3932,15 +3870,9 @@ Gale: {
     resultDiv.style.display = 'block';
   }
 
-  // --- Initialisation : sélection auto sans bouton ---
   const selectEl = document.getElementById('agent_pathogène');
   selectEl.addEventListener('change', (e) => {
     displayResults(e.target.value);
-  });
-
-  // Bouton pour afficher/masquer l'intro complète
-  document.getElementById('toggleIntroBtn').addEventListener('click', () => {
-    document.getElementById('introFull').classList.toggle('show');
   });
 </script>
 </body>

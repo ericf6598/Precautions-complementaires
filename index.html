@@ -33,21 +33,18 @@
       border: 1px solid #e2e8f0;
     }
 
-    /* Ligne titre + logo + bouton info */
+    /* Ligne titre + logo */
     .title-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 10px;
+      margin-bottom: 8px;
     }
 
     .title-left {
       display: flex;
       align-items: center;
       gap: 12px;
-      flex-wrap: wrap;
     }
 
     .logo {
@@ -66,19 +63,17 @@
       margin-bottom: 0;
     }
 
-    /* Bouton info */
+    /* Bouton info (style inline dans le HTML) */
     .info-btn {
       background: none;
       border: none;
-      font-size: 24px;
       cursor: pointer;
       color: #00796b;
-      transition: transform 0.2s;
-      padding: 5px;
+      font-size: 14px;
     }
 
     .info-btn:hover {
-      transform: scale(1.1);
+      text-decoration: underline;
     }
 
     .intro {
@@ -282,7 +277,9 @@
         <img class="logo" src="https://raw.githubusercontent.com/ericf6598/Precautions-complementaires/main/logo.png" alt="logo">
         <div class="main-title">Précautions complémentaires</div>
       </div>
-      <button class="info-btn" id="infoBtn">ⓘ</button>
+    </div>
+    <div style="text-align: right; margin-top: -5px; margin-bottom: 12px;">
+      <button class="info-btn" id="infoBtn" style="background: none; border: none; color: #00796b; font-size: 14px; cursor: pointer;">ⓘ À propos</button>
     </div>
     <div class="intro">
       Cette application élaborée à partir des recommandations en vigueur propose une aide à la mise en place des précautions complémentaires selon l'agent pathogène.<br> 

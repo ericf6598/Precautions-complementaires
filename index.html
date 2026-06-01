@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes"/>
-  <title>Précautions complémentaires - clin92</title>
+  <title>Résistance naturelle aux antibiotiques - clin92</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     * {
@@ -33,7 +33,6 @@
       border: 1px solid #e2e8f0;
     }
 
-    /* Ligne titre + logo */
     .title-row {
       display: flex;
       justify-content: space-between;
@@ -63,7 +62,6 @@
       margin-bottom: 0;
     }
 
-    /* Bouton info (style inline dans le HTML) */
     .info-btn {
       background: none;
       border: none;
@@ -87,6 +85,15 @@
 
     .intro strong {
       color: #00796b;
+    }
+
+    .intro a {
+      color: #00796b;
+      text-decoration: none;
+    }
+
+    .intro a:hover {
+      text-decoration: underline;
     }
 
     .select-section {
@@ -134,68 +141,97 @@
       padding: 20px;
       border: 1px solid #e2e8f0;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .result-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: #00796b;
-      text-align: center;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid #e2e8f0;
-    }
-
-    .subaccordion {
-      margin-bottom: 16px;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .subaccordion h3 {
-      background: #f8fafc;
-      padding: 14px 18px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #00796b;
-      cursor: pointer;
-      margin: 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .subaccordion h3::after {
-      content: '▼';
-      font-size: 12px;
-      transition: transform 0.2s;
-    }
-
-    .subaccordion.open h3::after {
-      transform: rotate(180deg);
-    }
-
-    .subaccordion-content {
       display: none;
-      padding: 16px 18px;
-      background: white;
-      border-top: 1px solid #e2e8f0;
     }
 
-    .subaccordion.open .subaccordion-content {
-      display: block;
-    }
-
-    .subaccordion-content ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-
-    .subaccordion-content li {
-      margin-bottom: 8px;
+    .info-box {
+      background-color: #e0f2f1;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
       line-height: 1.5;
       text-align: justify;
+      color: #1a2a3a;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      position: relative;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    #sensitivityTable {
+      min-width: 600px;
+    }
+
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #e6f7f5;
+      color: #1a2a3a;
+      font-weight: 600;
+    }
+	
+    #sensitivityTable th {
+      text-align: center;
+    }
+    #sensitivityTable thead th {
+      position: sticky;
+      top: 0;
+      background-color: #e6f7f5;
+      z-index: 10;
+    }
+
+    #sensitivityTable tbody tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    .sensitive {
+      color: #2e7d32 !important;
+      font-weight: 700;
+      background-color: #e8f5e9;
+    }
+
+    .resistant {
+      color: #d32f2f !important;
+      font-weight: 700;
+      background-color: #ffebee;
+    }
+
+    .intermittent {
+      color: #f57c00 !important;
+      font-weight: 700;
+      background-color: #fff3e0;
+    }
+
+    .sfp {
+      color: #2e7d32 !important;
+      font-weight: 700;
+      background-color: #e8f5e9;
+    }
+	
+    #sensitivityTable td:last-child {
+      text-align: center;
+    }
+	
+    .note {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
     }
 
     .legal {
@@ -207,7 +243,6 @@
       border-top: 1px solid #e2e8f0;
     }
 
-    /* Pop-up modale */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -266,6 +301,20 @@
     .close-modal-btn:hover {
       background-color: #004d40;
     }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #00796b;
+      font-size: 14px;
+    }
+
+    .error {
+      text-align: center;
+      padding: 40px;
+      color: #d32f2f;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -275,79 +324,54 @@
     <div class="title-row">
       <div class="title-left">
         <img class="logo" src="https://raw.githubusercontent.com/ericf6598/Precautions-complementaires/main/logo.png" alt="logo">
-        <div class="main-title">Précautions complémentaires</div>
+        <div class="main-title">Résistance naturelle aux antibiotiques</div>
       </div>
     </div>
     <div style="text-align: right; margin-top: -5px; margin-bottom: 12px;">
-      <button class="info-btn" id="infoBtn" style="background: none; border: none; color: #00796b; font-size: 14px; cursor: pointer;">ⓘ À propos</button>
+      <button class="info-btn" id="infoBtn">ⓘ À propos</button>
     </div>
     <div class="intro">
-      Cette application élaborée à partir des recommandations en vigueur propose une aide à la mise en place des précautions complémentaires selon l'agent pathogène.<br> 
-      Elle ne se substitue pas aux recommandations de votre équipe de prévention du risque infectieux.
+      <strong>📋 Aide à la décision</strong><br>
+      Cette application permet de visualiser le profil de résistance naturelle aux antibiotiques des principales espèces bactériennes impliquées en pathologie humaine (plus de 120 espèces). Elle ne prend pas en compte les résistances acquises.<br><br>
+      <strong>Référentiels :</strong> CA-SFM/EUCAST 2025 v1.1, EUCAST Expected resistant phenotypes v1.2, EUCAST Expected susceptible phenotypes v1.1.<br><br>
+      <strong>Légende :</strong> Abs = Absence de résistance naturelle (sensible), SFP = Sensible à forte posologie, R = Résistant, Rbn = Résistance de bas niveau, V = Variable.<br><br>
+      Une coquille ? Une question ? <a href="mailto:admin@clin92.com">admin@clin92.com</a>
     </div>
   </div>
 
   <div class="select-section">
-    <label class="select-label" for="agent_pathogène">Agent pathogène</label>
-    <select id="agent_pathogène" name="agent_pathogène">
-      <option value="">-- Sélectionnez un agent pathogène --</option>
-      <option value="Adenovirus_digestif">Adénovirus - gastro-entérite</option>
-      <option value="Adenovirus_respiratoire">Adénovirus - infection respiratoire</option>
-      <option value="Astrovirus">Astrovirus</option>
-      <option value="BHRe_patient_colonise">BHRe - patient colonisé</option>
-      <option value="BHRe_patient_contact">BHRe - patient contact</option>
-      <option value="BHRe_patient_suspect">BHRe – patient suspect</option>
-      <option value="BMR">BMR</option>
-      <option value="Campylobacter">Campylobacter</option>
-      <option value="Candida_auris">Candida auris</option>
-      <option value="Clostridioides_difficile">Clostridioides difficile</option>
-      <option value="Coqueluche">Coqueluche</option>
-      <option value="COVID_19">COVID-19</option>
-      <option value="Diphterie_cutanee">Diphtérie cutanée</option>
-      <option value="Diphterie_respiratoire">Diphtérie respiratoire</option>
-      <option value="Gale">Gale</option>
-      <option value="Gastro_enterite_aigue_bactérienne">Gastro-entérite aiguë bactérienne</option>
-      <option value="Gastro_enterite_aigue_virale">Gastro-entérite aiguë virale</option>
-      <option value="Grippe">Grippe</option>
-      <option value="Haemophilus_influenzae">Haemophilus influenzae</option>
-      <option value="Hepatite_A">Hépatite A</option>
-      <option value="Hepatite_E">Hépatite E</option>
-      <option value="Meningocoque">Méningocoque</option>
-      <option value="MERS">MERS</option>
-      <option value="Mpox">Mpox (Monkey pox)</option>
-      <option value="Mycoplasma_pneumoniae">Mycoplasma pneumoniae</option>
-      <option value="Norovirus">Norovirus</option>
-      <option value="Oreillons">Oreillons</option>
-      <option value="Poux">Poux</option>
-      <option value="Punaise">Punaise</option>
-      <option value="Rotavirus">Rotavirus</option>
-      <option value="Rougeole">Rougeole</option>
-      <option value="Rubeole">Rubéole</option>
-      <option value="Salmonelle">Salmonelle</option>
-      <option value="Sapovirus">Sapovirus</option>
-      <option value="Shigelle">Shigelle</option>
-      <option value="Streptocoque_groupes_A_C_G">Streptocoque groupes A, C, G</option>
-      <option value="Tuberculose">Tuberculose</option>
-      <option value="Varicelle">Varicelle</option>
-      <option value="VRS">VRS</option>
-      <option value="Zona">Zona</option>
+    <label class="select-label" for="speciesSelect">Espèce bactérienne</label>
+    <select id="speciesSelect" disabled>
+      <option value="">-- Chargement des données... --</option>
     </select>
   </div>
 
-  <div class="result" id="abResultat" style="display: none;"></div>
+  <div class="result" id="result">
+    <div class="info-box" id="infoBox"></div>
+    <div class="table-container">
+      <table id="sensitivityTable">
+        <thead>
+          <tr><th>Antibiotiques</th><th>Résultats</th></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="note">
+      Légende : Abs = Absence de résistance naturelle, SFP = Sensible Forte Posologie, R = Résistant, Rbn = résistance de bas niveau, V = Variable
+    </div>
+  </div>
 
   <div class="legal">
     © 2026 - Clin92 - Tous droits réservés
   </div>
 </div>
 
-<!-- Pop-up modale -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h3>📋 À propos</h3>
-    <p><strong>Application précautions complémentaires</strong><br>Version 1.0 - Clin92</p>
+    <p><strong>Application résistance naturelle</strong><br>Version 2.0 - Données externes</p>
     <hr>
-    <p>Développé par le Dr Eric Farfour<br>
+    <p>Conception : Dr Eric Farfour<br>
     Contact : <a href="mailto:admin@clin92.com" style="color:#00796b;">admin@clin92.com</a></p>
     <hr>
     <p>© 2026 - Tous droits réservés</p>
@@ -356,3659 +380,250 @@
 </div>
 
 <script>
-  function toggleSubAccordion(el){ el.parentElement.classList.toggle('open'); }
+// ============================================================
+// CONFIGURATION - À MODIFIER SELON VOTRE DÉPÔT GITHUB
+// ============================================================
+const CSV_URL = 'https://raw.githubusercontent.com/VOTRE_USERNAME/VOTRE_REPO/main/resistances.csv';
 
-const donneesAgentPathogene = {
-  Mpox: {
-	nom: "Mpox (variole du singe, monkeypox)",
-	precaution: [
-		"Précautions complémentaires respiratoires de type air et contact"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact et AIR en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou bionettoyage après chaque utilisation",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Limiter les visiteurs",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : port du masque FFP2 avant d’entrer dans la chambre : vérifier l'étanchéité (fit-check), lors d'une inspiration longue avec les deux mains sur le masque, celui-ci se plaque sur le visage, et à retirer après être sorti de la chambre et à jeter dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Pour les soignants : tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…)",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque FFP2 pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer le box de consultation pendant 15 minutes",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		},
-		{
-		titre: "Port d’un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Restreindre les visites à domicile pendant la période de contagiosité",
-		points: []
-		}
-		]
-	},
-	
-	
-  Varicelle: {
-	nom: "Varicelle",
-	precaution: [
-		"Précautions complémentaires respiratoires de type air et contact"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact et AIR en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou bionettoyage après chaque utilisation",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Limiter les visiteurs",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : port du masque FFP2 avant d’entrer dans la chambre : vérifier l'étanchéité (fit-check), lors d'une inspiration longue avec les deux mains sur le masque, celui-ci se plaque sur le visage, et à retirer après être sorti de la chambre et à jeter dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Pour les soignants : tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…)",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque FFP2 pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer le box de consultation pendant 15 minutes",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		},
-		{
-		titre: "Port d’un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Restreindre les visites à domicile pendant la période de contagiosité",
-		points: []
-		}
-		]
-	},
-
-
-  Zona: {
-	nom: "Zona",
-	precaution: [
-		"Précautions standard et chambre seule"
-		],
-	duree: [
-		"Jusqu'à la chute des croûtes"
-		],
-	hopital: [
-		{
-		titre: "Précautions standard seules",
-		points: [
-			"Hygiène des mains"
-		]
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		}
-		]
-	},
-
-
-  Diphterie_cutanee: {
-	nom: "Diphtérie cutanée",
-	precaution: [
-		"Précautions complémentaires contact"
-	],
-	duree: [
-		"Pendant toute la durée du séjour"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou bionettoyage après chaque utilisation",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…)",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		}
-	]
-	},
-
-  Diphterie_respiratoire: {
-	nom: "Diphtérie respiratoire",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Jusqu'à l'obtention de 2 cultures négatives à 24 heures d’intervalle après arrêt de l'antibiothérapie"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-
-
-  Meningocoque: {
-	nom: "Méningocoque",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Pendant les 24 heures suivant le début du traitement antibiotique actif sur le portage nasopharyngé"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-
-  Streptocoque_groupes_A_C_G: {
-	nom: "Streptocoque des groupes A, C, ou G (S. pyogenes, S. dysgalactiae)",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Pendant les 24 heures suivant le début de l'antibiothérapie efficace"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-
-  Haemophilus_influenzae: {
-	nom: "Haemophilus influenzae",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Pendant 24 heures suivant le début de l'antibiothérapie efficace"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-
-
-  Mycoplasma_pneumoniae: {
-	nom: "Mycoplasma pneumoniae",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Pendant 3 jours suivant le début de l'antibiothérapie efficace"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-
-
-  COVID_19: {
-	nom: "COVID-19",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		{
-		titre: "La durée de maintien des précautions complémentaire dépend du contexte clinique :",
-		points: [
-			"10 jours en absence de symptômes",
-			"14 jours pour les patients symptomatique non immunodéprimés ne présentant pas de forme grave, dont 2 jours sans fièvre",
-			"24 jours pour les patients immunodéprimés symptomatique ou en cas de forme grave symptomatique, dont 2 jours sans fièvre"
-		]
-		},
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-	
-	
-  Coqueluche: {
-	nom: "Coqueluche",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Pendant les 5 jours suivant la première prise d'antibiotique",
-		"Cette durée est réduite à 3 jours en cas de traitement par azithromycine"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-
-  Adenovirus_respiratoire: {
-	nom: "Adénovirus - infection respiratoire",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Jusqu’à guérison clinique et au maximum pendant 10 jours"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},	
-
-  VRS: {
-	nom: "VRS",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Jusqu’à guérison clinique et au maximum pendant 10 jours"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-	
-	
-  Grippe: {
-	nom: "Grippe",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Pendant les 7 jours suivant le début des symptômes"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-
-  Rubeole: {
-	nom: "Rubéole",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Pendant les 14 jours suivant le début de l’éruption"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-	
-  Oreillons: {
-	nom: "Oreillons",
-	precaution: [
-		"Précautions complémentaires respiratoires de type gouttelettes"
-		],
-	duree: [
-		"Pendant les 9 jours suivant le début de la parotidite"
-		],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires de type gouttelettes en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : masque chirurgical dès l’entrée de la chambre et à jeter à l’extérieur de la chambre dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Pour le personnel : masque FFP2 si risque d’aérosolisation du patient (kinésithérapie respiratoire, aspiration trachéale…)",
-			"Friction hydroalcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Tablier si contact rapproché avec le patient et/ou son environnement",
-		points: []
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…), et du matériel utilisé",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer si possible le box de consultation",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Tousser dans son coude, mouchoir à usage unique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical en cas de contact avec des personnes fragiles (personnes immunodéprimées, femmes enceintes…)",
-		points: []
-		}
-	]
-	},
-
-  BHRe_patient_colonise: {
-	nom: "BHRe - patient colonisé",
-	precaution: [
-		"Précautions complémentaires contact renforcées"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact renforcées en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de la chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après la mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Pour les soignants",
-		points: [
-			"Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre"
-		]
-		},
-		{
-		titre: "Renforcer le bionettoyage de l'environnement du patient",
-		points: [
-			"Deux fois par jour",
-			"En dernier, avec balai dédié"
-		]
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle : serviette personnelle et propre",
-		points: []
-		}
-	]
-	},
-
-
-
-  BHRe_patient_suspect: {
-	nom: "BHRe – patient suspect",
-	precaution: [
-		"Précautions complémentaires contact"
-	],
-	duree: [
-		"Selon contexte et analyse de risque"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou bionettoyage après chaque utilisation",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…)",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		}
-	]
-	},
-
-
-  BHRe_patient_contact: {
-	nom: "BHRe - patient contact",
-	precaution: [
-		"Précautions complémentaires contact"
-	],
-	duree: [
-		"Selon contexte et analyse de risque"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou bionettoyage après chaque utilisation",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…)",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		}
-	]
-	},
-
-
-
-  Rougeole: {
-	nom: "Rougeole",
-	precaution: [
-		"Précautions complémentaires respiratoires type air"
-	],
-	duree: [
-		"Pendant au moins 15 jours suivant le traitement efficace",
-		"Cette durée est à adapter en fonction du contexte clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires type AIR en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Limiter les visiteurs",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : port du masque FFP2 avant d’entrer dans la chambre : vérifier l'étanchéité (fit-check), lors d'une inspiration longue avec les 2 mains sur le masque, celui-ci se plaque sur le visage et à retirer après être sorti de la chambre et à jeter dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Friction hydro-alcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient",
-		points: [
-			"Chambre",
-			"Salle d'imagerie",
-			"Matériel utilisé"
-		]
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque FFP2 pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer le box de consultation pendant 15 mns",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Port d’un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Restreindre les visites à domicile pendant la période de contagiosité",
-		points: []
-		}
-		]
-	},
-
-
-  Tuberculose: {
-	nom: "Tuberculose",
-	precaution: [
-		"Précautions complémentaires respiratoires type air"
-	],
-	duree: [
-		"Pendant au moins 15 jours suivant le traitement efficace",
-		"Cette durée est à adapter en fonction du contexte clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires respiratoires type AIR en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule, porte fermée",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Aération régulière de la chambre",
-		points: []
-		},
-		{
-		titre: "Limiter les visiteurs",
-		points: []
-		},
-		{
-		titre: "Port du masque",
-		points: [
-			"Pour le personnel et les visiteurs : port du masque FFP2 avant d’entrer dans la chambre : vérifier l'étanchéité (fit-check), lors d'une inspiration longue avec les 2 mains sur le masque, celui-ci se plaque sur le visage et à retirer après être sorti de la chambre et à jeter dans le sac DASND (déchets d'activités de soins non dangereux)",
-			"Pour le patient : masque chirurgical si sortie de la chambre ou en présence d’autres personnes",
-			"Friction hydro-alcoolique après avoir éliminé le masque"
-		]
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: [
-			"Avant et après contact avec le patient et/ou son environnement",
-			"Avant et après mise en place des équipements de protection individuelle"
-		]
-		},
-		{
-		titre: "Port de lunettes de protection si risque de projections",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient",
-		points: [
-			"Chambre",
-			"Salle d'imagerie",
-			"Matériel utilisé"
-		]
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-		],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Port d'un masque FFP2 pour les soignants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour les accompagnants",
-		points: []
-		},
-		{
-		titre: "Port d'un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Aérer le box de consultation pendant 15 mns",
-		points: []
-		}
-		],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Port d’un masque chirurgical pour le patient",
-		points: []
-		},
-		{
-		titre: "Restreindre les visites à domicile pendant la période de contagiosité",
-		points: []
-		}
-		]
-	},
-
-
-MERS: {
-  nom: "MERS",
-	precaution: [
-		"Précautions complémentaires respiratoires gouttelettes et contact spécifique, en attente du transfert dans un établissement de référence avec des chambres à pression d’air négative"
-	],
-	duree: [
-		"Pendant toute la durée du séjour jusqu'au transfert en établissement de référence"
-	],
-	hopital: [
-    {
-      titre: "Information du patient et des professionnels (à tracer)",
-      points: []
-    },
-    {
-      titre: "Précautions complémentaires contact et AIR en complément des précautions standard (à prescrire)",
-      points: []
-    },
-    {
-      titre: "Hospitalisation en chambre seule, porte fermée",
-      points: []
-    },
-    {
-      titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements, alerte dossier",
-      points: []
-    },
-    {
-      titre: "Matériel dédié au patient ou à usage unique",
-      points: []
-    },
-    {
-      titre: "Application du principe de marche en avant",
-      points: []
-    },
-    {
-      titre: "Aération régulière de la chambre",
-      points: []
-    },
-    {
-      titre: "Limiter les visiteurs",
-      points: []
-    },
-    {
-      titre: "Hygiène des mains par friction hydroalcoolique avant contact avec le patient et avant mise en place des équipements de protection individuelle",
-      points: []
-    },
-    {
-      titre: "Port du masque",
-      points: [
-        "Pour le personnel et les visiteurs : port du masque FFP2 avant d’entrer dans la chambre : vérifier l'étanchéité (fit-check), lors d'une inspiration longue avec les 2 mains sur le masque, celui-ci se plaque sur le visage et à retirer après être sorti de la chambre et à jeter dans le sac DASRI",
-        "Pour le patient : masque chirurgical et mis à disposition SHA",
-        "Friction hydroalcoolique après avoir éliminé le masque en dehors de la chambre"
-      ]
-    },
-    {
-      titre: "Pour tous : Surblouse manches longues à usage unique dès l’entrée de la chambre + tablier plastique à UU si soins mouillants ou souillants. Port des gants dès l’entrée de la chambre",
-      points: [
-        "A la sortie : retirer surblouse et gants à jeter en DASRI placé dans la chambre",
-        "Lavage des mains eau et savon obligatoire pour éliminer les spores puis SHA ou utilisation d’un savon antiseptique"
-      ]
-    },
-    {
-      titre: "Port de lunettes de protection si risque de projection",
-      points: []
-    },
-    {
-      titre: "Tout le matériel jetable sera placé dans un conteneur à déchets contaminés et éliminé suivant la filière DASRI",
-      points: []
-    },
-    {
-      titre: "Valisette pour les repas",
-      points: []
-    },
-    {
-      titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…) avec balai dédié",
-      points: [
-        "Bionettoyage classique Détergent/désinfectant",
-        "Puis Eau de Javel à 0,5%"
-      ]
-    },
-    {
-      titre: "Gestion des excreta",
-      points: [
-        "Utilisation gélification",
-        "Eliminer en DASRI"
-      ]
-    },
-    {
-      titre: "Gestion des déchets et du linge",
-      points: [
-        "Conditionner le linge en emballage étanche (sac hydrosoluble)",
-        "Ne pas le stocker dans la chambre",
-        "Eliminer tous les déchets en DASRI"
-      ]
-    }
-	],
-	consultation: [
-    {
-      titre: "Non applicables",
-      points: []
-    }
-	],
-	domicile: [
-    {
-      titre: "Non applicables",
-      points: []
-    }
-	]
-	},
-
-  Clostridioides_difficile: {
-	nom: "Clostridioides difficile",
-	precaution: [
-		"Précautions complémentaires contact <em>Clostridioides difficile</em>"
-	],
-	duree: [
-		"Jusqu'à 72 heures après la fin de la diarrhée"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact <em>Clostridioides difficile</em> en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant contact avec le patient et avant mise en place des équipements de protection individuelle",
-		points: []
-		},
-		{
-		titre: "Pour les soignants : Surblouse manches longues dès l’entrée de la chambre + tablier plastique à UU si soins mouillants ou souillants. Port des gants dès l’entrée de la chambre",
-		points: [
-			"A la sortie : retirer surblouse et gants à jeter en DASRI placé dans la chambre",
-			"Lavage des mains eau et savon obligatoire pour éliminer les spores puis SHA ou utilisation d’un savon antiseptique"
-		]
-		},
-		{
-		titre: "Valisette pour les repas",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…) avec balai dédié",
-		points: [
-			"Lingettes sporicides ou produit nettoyante/désinfectante sporicide",
-			"Poudre à diluer Anios OXY’FLOOR pour le bionettoyage des sols et des surfaces générales",
-			"Si rupture de ces 2 produits, il est possible d’utiliser de l’eau de Javel à 0,5%"
-		]
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au LB"
-		]
-		},
-		{
-		titre: "Gestion des déchets et du linge",
-		points: [
-			"Conditionner le linge en emballage étanche (sac hydrosoluble)",
-			"Ne pas le stocker dans la chambre",
-			"Eliminer tous les déchets en DASRI"
-		]
-		}
-	],
-	consultation: [
-		{
-		titre: "Lavage des mains obligatoire eau et savon pour éliminer les spores puis SHA ou utilisation d’un savon antiseptique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage par lingette sporicide",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas",
-		points: []
-		},
-		{
-		titre: "Nettoyer toilettes eau de javel le temps retour transit normal",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		}
-	]
-	},
-
-  BMR: {
-	nom: "BMR",
-	precaution: [
-		"Précautions complémentaires contact"
-	],
-	duree: [
-		"Pendant toute la durée du séjour"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements, alerte dossier",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou bionettoyage après chaque utilisation",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…)",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		}
-	]
-	},
-
-
-  Punaise: {
-	nom: "Punaise",
-	precaution: [
-		"Précautions complémentaires contact spécifique Punaise"
-	],
-	duree: [
-		"L’isolement est à maintenir pendant toute la durée de l’hospitalisation"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact Spécifiques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou bionettoyage après chaque utilisation",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant contact avec le patient et/ou son environnement et avant mise en place des équipements de protection individuelle",
-		points: []
-		},
-		{
-		titre: "Pour les soignants : Port de gants et surblouse à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre.",
-		points: [
-			"A la sortie : retirer surblouse et gants à jeter en DASRI placé dans la chambre. Lavage des mains eau et savon puis SHA ou utilisation d’un savon antiseptique."
-		]
-		},
-		{
-		titre: "Récupérer les vêtements du patient et les mettre dans un sac hydrosoluble, à récupérer par la famille (lavage 60°C) et remettre au patient un pyjama propre. Douche quotidienne.",
-		points: []
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : Prévenir la blanchisserie.",
-		points: [
-			"Recueil du linge dans un sac hydrosoluble en premier emballage puis dépôt dans un deuxième emballage dès la sortie de la chambre : lavage 60°C."
-		]
-		},
-		{
-		titre: "A la sortie du patient : jeter tout le matériel à usage unique, vérifier l’intégrité du matelas. En cas d’usure le matelas doit être jeté et détruit. Bionettoyage vapeur de la pièce, du lit et du mobilier minutieusement.",
-		points: []
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains et port de gants",
-		points: []
-		},
-		{
-		titre: "Après avoir retiré les gants : hygiène des mains par eau et savon puis SHA ou utilisation d’un savon antiseptique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		},
-		{
-		titre: "Traitement punaises de lit à domicile avec gestion linge à 60°C, changement matelas, possibilité société spécialisée dans prise en charge punaise.",
-		points: []
-		}
-	]
-	},
-
-  Poux: {
-	nom: "Poux",
-	precaution: [
-		"Précautions complémentaires contact spécifique Poux"
-	],
-	duree: [
-		"Jusqu’à la disparition des poux et lentes vivants"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact Spécifiques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou bionettoyage après chaque utilisation",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant contact avec le patient et/ou son environnement et avant mise en place des équipements de protection individuelle",
-		points: []
-		},
-		{
-		titre: "Pour les soignants : Port de gants et surblouse à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre.",
-		points: [
-			"A la sortie : retirer surblouse et gants à jeter en DASRI placé dans la chambre. Lavage des mains eau et savon puis SHA ou utilisation d’un savon antiseptique."
-		]
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…)",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : Prévenir la blanchisserie.",
-		points: [
-			"Recueil du linge dans un sac hydrosoluble en premier emballage puis dépôt dans un deuxième emballage dès la sortie de la chambre : lavage 60°C.",
-			"Si ne supporte pas la température de 60°C : ajout insecticide / sac plastique fermé 72 heures."
-		]
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains et port de gants",
-		points: []
-		},
-		{
-		titre: "Après avoir retiré les gants : hygiène des mains par eau et savon puis SHA ou utilisation d’un savon antiseptique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		},
-		{
-		titre: "Traitement poux pour patient famille linge et literie",
-		points: []
-		}
-	]
-	},
-
-
-Gale: {
-  nom: "Gale",
-	precaution: [
-		"Précautions complémentaires contact spécifiques Gale"
-	],
-	duree: [
-		"Pendant 2 jours suivant la 1ère prise du traitement antiparasitaire et après bionettoyage complet de l'environnement/linge du patient"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact Spécifiques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou bionettoyage après chaque utilisation",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant contact avec le patient et/ou son environnement et avant mise en place des équipements de protection individuelle",
-		points: []
-		},
-		{
-		titre: "Pour les soignants : Port de gants et surblouse à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre.",
-		points: [
-			"A la sortie : retirer surblouse et gants à jeter en DASRI placé dans la chambre. Lavage des mains eau et savon puis SHA ou utilisation d’un savon antiseptique."
-		]
-		},
-		{
-		titre: "Bionettoyage en dernier de l'environnement du patient (chambre, salle d'imagerie…)",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : Prévenir la blanchisserie.",
-		points: [
-			"Recueil du linge dans un sac hydrosoluble en premier emballage puis dépôt dans un deuxième emballage dès la sortie de la chambre : lavage 60°C.",
-			"Si ne supporte pas la température de 60°C : ajout acaricide / sac plastique fermé 72 heures."
-		]
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains et port de gants",
-		points: []
-		},
-		{
-		titre: "Après avoir retiré les gants : hygiène des mains par eau et savon puis SHA ou utilisation d’un savon antiseptique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		},
-		{
-		titre: "Protocole gale pour patient famille linge et literie",
-		points: []
-		}
-	]
-	},
-
-
-
-  Candida_auris: {
-	nom: "Candida auris",
-	precaution: [
-		"Précautions complémentaires contact Candida auris"
-	],
-	duree: [
-		"Pendant toute la durée l’hospitalisation",
-		"Réaliser un dépistage à 6 mois afin de réévaluer le statut du patient"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact Candida auris en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre.",
-		points: []
-		},
-		{
-		titre: "Valisette pour les repas",
-		points: []
-		},
-		{
-		titre: "Renforcer le bionettoyage de l'environnement du patient 2 fois par jour, en dernier avec balai dédié avec produit actif sur Candida auris (Par ex. : Anios Oxy’floor®, Incidin Oxyfoam®, hypochlorite de sodium à 0.1% de chlore actif).",
-		points: []
-		},
-		{
-		titre: "A la sortie du patient, réaliser un double bionettoyage avec un produit actif sur C. auris (Insister sur le lit, le matelas, l’adaptable, le matériel partagé…).",
-		points: []
-		},
-		{
-		titre: "Gestion des excreta : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Gestion des déchets et du linge : circuit habituel",
-		points: []
-		},
-		{
-		titre: "Sectorisation si plusieurs patients sont colonisés à discuter selon le type de service (réanimation) et jusqu’à l'arrêt des entrées et sorties en cas d'épidémie importante et sur avis de l'EPRI",
-		points: []
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle et propre",
-		points: []
-		}
-	]
-	},
-
-
-  Adenovirus_digestif: {
-    nom: "Adénovirus (gastro-entérite)",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu’à la guérison clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-	
-  Hepatite_A: {
-    nom: "Hépatite A",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Pendant les 10 jours suivant le début de l’ictère"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-
-  Hepatite_E: {
-    nom: "Hépatite E",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Pendant les 10 jours suivant le début de l’ictère"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-
-  Rotavirus: {
-    nom: "Rotavirus",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu’à la guérison clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-
-  Norovirus: {
-    nom: "Norovirus",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu’à la guérison clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-
-  Astrovirus: {
-    nom: "Astrovirus",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu’à la guérison clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-
-  Sapovirus: {
-    nom: "Sapovirus",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu’à la guérison clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-
-  Gastro_enterite_aigue_virale: {
-    nom: "Gastro-enterite aigue virale",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu’à la guérison clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-	
-  Gastro_enterite_aigue_bactérienne: {
-    nom: "Gastro-entérite aigue bactérienne",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu’à la guérison clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-	
-  Shigelle: {
-    nom: "Shigelle",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu'à l'obtention de 2 coprocultures négatives à 24 heures d’intervalle, et au moins 48 heures après l’arrêt de l’antibiothérapie"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-	
-
-  Salmonelle: {
-    nom: "Salmonelle",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu'à l'obtention de 2 coprocultures négatives à 24 heures d’intervalle, et au moins 48 heures après l’arrêt de l’antibiothérapie"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	},
-
-  Campylobacter: {
-    nom: "Campylobacter",
-	precaution: [
-		"Précautions complémentaires contact type gastro-entérique"
-	],
-	duree: [
-		"Jusqu’à la guérison clinique"
-	],
-	hopital: [
-		{
-		titre: "Information du patient et des professionnels (à tracer)",
-		points: []
-		},
-		{
-		titre: "Précautions complémentaires contact entériques en complément des précautions standard (à prescrire)",
-		points: []
-		},
-		{
-		titre: "Hospitalisation en chambre seule",
-		points: []	
-		},
-		{
-		titre: "Signalétique sur la porte de chambre avec unité mobile de protection pour les équipements",
-		points: []	
-		},
-		{
-		titre: "Matériel dédié au patient ou à usage unique",
-		points: []	
-		},
-		{
-		titre: "Application du principe de marche en avant",
-		points: []	
-		},
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique avant et après contact avec le patient et/ou son environnement et avant et après mise en place des équipements de protection individuelle",
-		points: []	
-		},
-		{
-		titre: "Pour les soignants : Tablier à usage unique en cas de contact rapproché avec le patient et/ou son environnement, à jeter avant de sortir de la chambre en DASRI placé dans la chambre",
-		points: []	
-		},
-		{
-		titre: "Gestion des excreta",
-		points: [
-			"Evacuer rapidement les selles au lave-bassin",
-			"Eliminer les protections en DASRI ou acheminer le bassin avec couvercle au lave-bassin"
-			]	
-		}
-	],
-	consultation: [
-		{
-		titre: "Hygiène des mains par friction hydroalcoolique",
-		points: []
-		},
-		{
-		titre: "Bionettoyage",
-		points: []
-		}
-	],
-	domicile: [
-		{
-		titre: "Hygiène des mains après passage aux toilettes, repas...",
-		points: []
-		},
-		{
-		titre: "Hygiène corporelle, serviette personnelle",
-		points: []
-		}
-	]
-	}
-
+// Notes communes (peuvent aussi être dans un fichier séparé)
+const groupNotes = {
+  "Enterobacterales": "<u>Les Enterobacterales sont naturellement résistantes aux antibiotiques suivants :</u> • Pénicilline G, • Oxacilline, • Macrolides (sauf azithromycine pour le traitement des diarrhées à Salmonella et à Shigella), • Kétolides, • Lincosamides, • Streptogramines, • Acide fusidique, • Glycopeptides, • Oxazolidinones, • Lipoglycopeptides, • Rifampicine.",
+  "Bacille à Gram négatif non fermentaire": "<u>Les Bacilles à Gram négatifs non-fermentaires sont naturellement résistants aux antibiotiques suivants :</u> • Pénicilline G, • Aminopénicillines, • Oxacilline, • Céphalosporines de 1re génération (C1G), • Céphalosporines de 2e génération (C2G), • Céfotaxime, • Ceftriaxone, • Ertapénème, • Macrolides, • Kétolides, • Lincosamides, • Streptogramines, • Acide fusidique, • Glycopeptides, • Oxazolidinones, • Lipoglycopeptides.",
+  "Aeromonas": "<u>Les Aeromonas sont naturellement résistants aux antibiotiques suivants :</u> • Pénicilline G, • Oxacilline, • Macrolides, • Kétolides, • Lincosamides, • Streptogramines, • Acide fusidique, • Glycopeptides, • Oxazolidinones, • Lipoglycopeptides, • Rifampicine.",
+  "Campylobacter": "<u>Les Campylobacter sont naturellement résistants à :</u> • Oxacilline, • Céphalosporines, • Acide fusidique, • Glycopeptides, • Oxazolidinones, • Colistine, • lipoglycopeptides.",
+  "Bacille à Gram positif": "<u>Les bactéries Gram-positives sont naturellement résistantes à :</u> • Mécillinam, • Aztréonam, • Témocilline, • Acide nalidixique, • Colistine.",
+  "Enterocoque": "<u>Les entérocoques sont naturellement résistants à :</u> • Pénicilline G, • Oxacilline, • Mécillinam, • Céphalosporines, • Aztréonam, • Ertapénème, • Céfidérocol, • Témocilline, • Acide nalidixique, • Sulfamides, • Colistine.",
+  "Staphylocoque": "<u>Les staphylocoques sont naturellement résistants à :</u> • Mécillinam, • Aztréonam, • Ertapénème, • Céfidérocol, • Témocilline, • Acide nalidixique, • Colistine.",
+  "Cocco-bacille à Gram négatif": "<u>Ces Haemophilus, Moraxella, Neisseria et Pasteurella sont naturellement résistants aux antibiotiques suivants :</u> • Oxacilline, • Acide fusidique (sauf Moraxella spp. et Neisseria spp.), • Glycopeptides, • Oxazolidinones, • Lipoglycopeptides.",
+  "Cocci à Gram positif": "<u>Les cocci Gram-positifs sont naturellement résistants aux antibiotiques suivants :</u> • Mécillinam, • Aztréonam, • Céfidérocol, • Témocilline, • Acide nalidixique, • Colistine.",
+  "Anaérobie à Gram négatif": "<u>Les bactéries anaérobies à Gram négatif sont naturellement résistantes aux antibiotiques suivants :</u> • Aminosides (sauf Campylobacter ureolyticus sensible à la gentamicine et à l’amikacine), • Aztréonam (sauf Fusobacterium spp. et C. ureolyticus), • Témocilline, • Acide nalidixique, • Fosfomycine (sauf Fusobacterium spp.), • Triméthoprime, • Lipoglycopeptides.",
+  "Anaérobie à Gram positif": "<u>Les bactéries anaérobies à Gram positif sont naturellement résistantes aux antibiotiques suivants :</u> • Aminosides, • Aztréonam, • Témocilline, • Acide nalidixique, • Fosfomycine, • Triméthoprime, • Colistine."
 };
 
+// Variables globales
+let medicalData = {
+  antibiotics: [],
+  bacteriaProfiles: {}
+};
 
-  function formatNestedList(items) {
-    if (!items || !items.length) return "<ul><li>Non spécifié</li></ul>";
-    if (typeof items[0] === "string") {
-      return `<ul>${items.map(i => `<li>${i}</li>`).join('')}</ul>`;
+// ============================================================
+// FONCTIONS DE PARSING CSV
+// ============================================================
+
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current);
+      current = '';
     } else {
-      let html = "<ul>";
-      items.forEach(r => {
-        html += `<li>${r.titre}`;
-        if (r.points && r.points.length) {
-          html += "<ul>";
-          r.points.forEach(p => { html += `<li>${p}</li>`; });
-          html += "</ul>";
-        }
-        html += "</li>";
-      });
-      html += "</ul>";
-      return html;
+      current += char;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
+function parseCSV(csvText) {
+  const lines = csvText.split('\n');
+  const headers = parseCSVLine(lines[0]);
+  
+  // Les 5 premières colonnes sont les métadonnées
+  const metaColumns = ['species', 'type', 'group', 'remark'];
+  // La colonne 5 est 'group_enzymatique' (index 4)
+  const antibiotics = headers.slice(5);
+  
+  const bacteriaProfiles = {};
+  
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    
+    const values = parseCSVLine(lines[i]);
+    if (values.length < 6) continue;
+    
+    const species = values[0] ? values[0].trim() : '';
+    if (species === '') continue;
+    
+    const type = values[1] ? values[1].trim() : '';
+    const group = values[2] ? values[2].trim() : '';
+    const remark = values[3] ? values[3].trim() : '';
+    const groupEnzymatique = values[4] ? values[4].trim() : '';
+    
+    // Extraire les données des antibiotiques
+    const data = [];
+    for (let j = 5; j < values.length && j < headers.length; j++) {
+      let val = values[j] || '';
+      // Nettoyer les guillemets résiduels
+      val = val.replace(/^"|"$/g, '');
+      data.push(val);
+    }
+    
+    bacteriaProfiles[species] = {
+      type: type,
+      group: groupEnzymatique,
+      remarque: remark,
+      data: data
+    };
+  }
+  
+  return { antibiotics, bacteriaProfiles };
+}
+
+// ============================================================
+// CHARGEMENT DES DONNÉES DEPUIS GITHUB
+// ============================================================
+
+async function loadData() {
+  const selectEl = document.getElementById('speciesSelect');
+  const loadingDiv = document.createElement('div');
+  loadingDiv.className = 'loading';
+  loadingDiv.innerHTML = '📥 Chargement des données...';
+  selectEl.parentNode.insertBefore(loadingDiv, selectEl);
+  
+  try {
+    const response = await fetch(CSV_URL);
+    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    
+    const csvText = await response.text();
+    const { antibiotics, bacteriaProfiles } = parseCSV(csvText);
+    
+    medicalData.antibiotics = antibiotics;
+    medicalData.bacteriaProfiles = bacteriaProfiles;
+    
+    // Remplir le sélecteur
+    selectEl.innerHTML = '<option value="">-- Sélectionnez une espèce --</option>';
+    const speciesList = Object.keys(bacteriaProfiles).sort();
+    for (const sp of speciesList) {
+      const opt = document.createElement('option');
+      opt.value = sp;
+      opt.textContent = sp;
+      selectEl.appendChild(opt);
+    }
+    selectEl.disabled = false;
+    
+    // Supprimer l'indicateur de chargement
+    loadingDiv.remove();
+    
+    console.log(`✅ Données chargées : ${speciesList.length} espèces, ${antibiotics.length} antibiotiques`);
+    
+  } catch (error) {
+    console.error('Erreur de chargement:', error);
+    loadingDiv.innerHTML = `❌ Erreur de chargement: ${error.message}<br><br>Vérifiez que le fichier resistances.csv est accessible à l'URL:<br>${CSV_URL}`;
+    loadingDiv.className = 'error';
+    selectEl.disabled = true;
+    selectEl.innerHTML = '<option value="">-- Erreur de chargement --</option>';
+  }
+}
+
+// ============================================================
+// AFFICHAGE DES RÉSULTATS
+// ============================================================
+
+function getClass(v) {
+  const val = String(v).trim();
+  if (val === "Abs" || val === "S*") return "sensitive";
+  if (val === "R") return "resistant";
+  if (val === "V" || val === "r") return "intermittent";
+  if (val === "SFP") return "sfp";
+  return "";
+}
+
+function displaySensitivity() {
+  const selectEl = document.getElementById("speciesSelect");
+  const sel = selectEl.value;
+  
+  if (!sel || !medicalData.bacteriaProfiles[sel]) {
+    document.getElementById("result").style.display = "none";
+    return;
+  }
+
+  const data = medicalData.bacteriaProfiles[sel];
+  const dataArray = data.data;
+  const antibiotics = medicalData.antibiotics;
+  const infoBox = document.getElementById("infoBox");
+  const tableBody = document.getElementById("tableBody");
+  const resultDiv = document.getElementById("result");
+
+  // Trouver le groupe pour la note
+  let matchedGroup = null;
+  const type = data.type;
+  for (const g in groupNotes) {
+    if (type === g || (type && type.includes(g))) {
+      matchedGroup = g;
+      break;
     }
   }
 
-  function displayResults(valeur) {
-    const resultDiv = document.getElementById('abResultat');
-    if (!valeur || !donneesAgentPathogene[valeur]) {
-      resultDiv.style.display = 'none';
-      return;
-    }
-    const data = donneesAgentPathogene[valeur];
-    let output = `<div class="result-title">${data.nom || valeur}</div>`;
-    output += `
-      <div class="subaccordion closed">
-        <h3 onclick="toggleSubAccordion(this)">🛡️ Précautions complémentaires</h3>
-        <div class="subaccordion-content">${formatNestedList(data.precaution)}</div>
-      </div>
-      <div class="subaccordion closed">
-        <h3 onclick="toggleSubAccordion(this)">🕒 Durée</h3>
-        <div class="subaccordion-content">${formatNestedList(data.duree)}</div>
-      </div>
-      <div class="subaccordion closed">
-        <h3 onclick="toggleSubAccordion(this)">🏥 Précautions en hospitalisation</h3>
-        <div class="subaccordion-content">${formatNestedList(data.hopital)}</div>
-      </div>
-      <div class="subaccordion closed">
-        <h3 onclick="toggleSubAccordion(this)">🩺 Précautions en consultation</h3>
-        <div class="subaccordion-content">${formatNestedList(data.consultation)}</div>
-      </div>
-      <div class="subaccordion closed">
-        <h3 onclick="toggleSubAccordion(this)">🏠 Précautions au domicile</h3>
-        <div class="subaccordion-content">${formatNestedList(data.domicile)}</div>
-      </div>
-    `;
-    resultDiv.innerHTML = output;
-    resultDiv.style.display = 'block';
+  // Encart d'information
+  let lines = [];
+  if (data.type) lines.push(`<u>Type :</u> ${data.type}`);
+  if (data.group && data.group.trim() !== "" && data.group !== "0") {
+    lines.push(`<u>Groupe enzymatique :</u> ${data.group}`);
   }
+  if (data.remarque && data.remarque.trim() !== "") {
+    lines.push(`<u>Remarque :</u> ${data.remarque}`);
+  }
+  if (matchedGroup && groupNotes[matchedGroup]) {
+    lines.push(groupNotes[matchedGroup]);
+  }
+  
+  infoBox.innerHTML = lines.join("<br>") || "Aucune information supplémentaire.";
 
-  const selectEl = document.getElementById('agent_pathogène');
-  selectEl.addEventListener('change', (e) => {
-    displayResults(e.target.value);
+  // Tableau des antibiotiques
+  tableBody.innerHTML = "";
+  antibiotics.forEach((ab, i) => {
+    const val = dataArray[i];
+    if (!val || val.trim() === "") return;
+
+    const tr = document.createElement("tr");
+    const td1 = document.createElement("td");
+    td1.textContent = ab;
+    const td2 = document.createElement("td");
+    td2.textContent = val;
+    td2.className = getClass(val);
+
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tableBody.appendChild(tr);
   });
 
-  // Gestion du pop-up
-  const infoBtn = document.getElementById('infoBtn');
-  const modalOverlay = document.getElementById('modalOverlay');
-  const closeModalBtn = document.getElementById('closeModalBtn');
+  resultDiv.style.display = "block";
+}
 
-  infoBtn.addEventListener('click', () => {
-    modalOverlay.style.display = 'flex';
-  });
+// ============================================================
+// GESTION DU POP-UP
+// ============================================================
 
-  closeModalBtn.addEventListener('click', () => {
+const infoBtn = document.getElementById('infoBtn');
+const modalOverlay = document.getElementById('modalOverlay');
+const closeModalBtn = document.getElementById('closeModalBtn');
+
+infoBtn.addEventListener('click', () => {
+  modalOverlay.style.display = 'flex';
+});
+
+closeModalBtn.addEventListener('click', () => {
+  modalOverlay.style.display = 'none';
+});
+
+modalOverlay.addEventListener('click', (e) => {
+  if (e.target === modalOverlay) {
     modalOverlay.style.display = 'none';
-  });
+  }
+});
 
-  modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) {
-      modalOverlay.style.display = 'none';
-    }
-  });
+// ============================================================
+// INITIALISATION
+// ============================================================
+
+document.getElementById("speciesSelect").addEventListener("change", displaySensitivity);
+loadData();
 </script>
 </body>
 </html>
